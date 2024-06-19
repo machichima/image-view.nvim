@@ -1,24 +1,51 @@
 local M = {} -- M stands for module, a naming convention
 
+---@type config
+M.config = {
+  opts = {
+    open_type = "explorer",
+    -- option:
+    -- 1. "explorer": by Windows picture / tmux
+    -- 2. "tmux"
+    -- 3. "wsl": use `open` command
+  },
+}
+
 local create_popup = function(img_path)
-  local function has_two_panes()
-    local panes = tonumber(vim.fn.system("tmux display-message -p '#{window_panes}'"))
-    return panes == 2
+  if M.config.opts.open_type == "explorer" then
+    vim.cmd("!wsl-open '" .. img_path .. "'")
+    print("use windows explorer")
   end
 
-  if has_two_panes() then
-    vim.cmd("!tmux select-pane -l")
-    print("There are 2 panes in the current window")
-  else
-    vim.cmd("!tmux split-window -hf -d")
-    print("The number of panes is not 2")
+  if M.config.opts.open_type == "wsl" then
+    vim.cmd("!open '" .. img_path .. "'")
+    print("use wsl open")
   end
 
-  -- vim.fn.setreg("+", img_path)
-  vim.cmd('!tmux send-keys -t 1 "imgcat ' .. img_path .. '" Enter')
+  if M.config.opts.open_type == "tmux" then
+    local function has_two_panes()
+      local panes = tonumber(vim.fn.system("tmux display-message -p '#{window_panes}'"))
+      return panes == 2
+    end
+
+    if has_two_panes() then
+      vim.cmd("!tmux select-pane -l")
+      print("There are 2 panes in the current window")
+    else
+      vim.cmd("!tmux split-window -hf -d")
+      print("The number of panes is not 2")
+    end
+
+    -- vim.fn.setreg("+", img_path)
+    vim.cmd('!tmux send-keys -t 1 "imgcat ' .. img_path .. '" Enter')
+  end
 end
 
-function M.setup()
+---@param params config
+function M.setup(params)
+  -- set up user config
+  M.config = vim.tbl_deep_extend("force", {}, M.config, params)
+
   local client = require("obsidian").get_client()
 
   local in_obsidian = false -- client.path_is_note(vim.fn.expand("%:p"), client.current_workspace)
