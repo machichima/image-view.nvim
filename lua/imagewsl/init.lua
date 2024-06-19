@@ -84,9 +84,9 @@ function M.setup(params)
       local name = query.captures[id]
       local value = vim.treesitter.get_node_text(node, buf)
 
-      if name == "image" then
-        local start_row, start_col, end_row, end_col = node:range()
+      local start_row, start_col, end_row, end_col = node:range()
 
+      if name == "image" then
         print("element at: ", start_row, start_col, end_row, end_col)
         print("cursor at: ", cursor_row, cursor_col)
 
@@ -94,20 +94,22 @@ function M.setup(params)
           has_img = true
         end
       elseif has_img and name == "url" then
-        print(client.current_workspace.path, value)
-        if in_obsidian then
-          -- For obsidian notes (with incomplete image path)
-          local workspace_path = tostring(client.current_workspace.path)
-          local attachments_folder = client.opts.attachments.img_folder
-          url = workspace_path .. "/" .. attachments_folder .. "/" .. value
-        else
-          -- For other markdown note (with full image path)
-          url = value
+        if cursor_row == start_row + 1 and cursor_col >= start_col and cursor_col <= end_col then
+          print(client.current_workspace.path, value)
+          if in_obsidian then
+            -- For obsidian notes (with incomplete image path)
+            local workspace_path = tostring(client.current_workspace.path)
+            local attachments_folder = client.opts.attachments.img_folder
+            url = workspace_path .. "/" .. attachments_folder .. "/" .. value
+          else
+            -- For other markdown note (with full image path)
+            url = value
+          end
+          print("name: ", name)
+          print("value: ", value)
+          print("url: ", url)
+          create_popup(url)
         end
-        print("name: ", name)
-        print("value: ", value)
-        print("url: ", url)
-        create_popup(url)
       end
     end
   end
