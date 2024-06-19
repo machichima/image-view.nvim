@@ -10,21 +10,38 @@ local create_popup = function(img_path)
     vim.cmd("!tmux select-pane -l")
     print("There are 2 panes in the current window")
   else
-    vim.cmd("!tmux split-window -hf")
+    vim.cmd("!tmux split-window -hf -d")
     print("The number of panes is not 2")
   end
 
+  -- vim.fn.setreg("+", img_path)
   vim.cmd('!tmux send-keys -t 1 "imgcat ' .. img_path .. '" Enter')
 end
 
 function M.setup()
-  print("start")
-  -- local client = require("obsidian").get_client()
+  local client = require("obsidian").get_client()
 
-  local query = vim.treesitter.query.parse("markdown_inline", "(image (link_destination) @url) @image")
+  local in_obsidian = false -- client.path_is_note(vim.fn.expand("%:p"), client.current_workspace)
+  print(client.current_workspace.path)
 
   local get_node_at_cursor = function()
-    -- print(client.current_workspace.path)
+    if string.find(vim.fn.expand("%:p"), tostring(client.current_workspace.path)) then
+      in_obsidian = true
+    end
+
+    print("in obsidian? ", in_obsidian)
+
+    local query = nil
+    if in_obsidian then
+      -- For obsidian notes (with incomplete image path)
+      query = vim.treesitter.query.parse(
+        "markdown_inline",
+        "(image (image_description(shortcut_link(link_text) @url))) @image"
+      )
+    else
+      -- For other markdown note (with full image path)
+      query = vim.treesitter.query.parse("markdown_inline", "(image (link_destination) @url) @image")
+    end
 
     local cursor_row, cursor_col = unpack(vim.api.nvim_win_get_cursor(0))
 
@@ -50,9 +67,19 @@ function M.setup()
           has_img = true
         end
       elseif has_img and name == "url" then
-        url = value
+        print(client.current_workspace.path, value)
+        if in_obsidian then
+          -- For obsidian notes (with incomplete image path)
+          local workspace_path = tostring(client.current_workspace.path)
+          local attachments_folder = client.opts.attachments.img_folder
+          url = workspace_path .. "/" .. attachments_folder .. "/" .. value
+        else
+          -- For other markdown note (with full image path)
+          url = value
+        end
         print("name: ", name)
         print("value: ", value)
+        print("url: ", url)
         create_popup(url)
       end
     end
