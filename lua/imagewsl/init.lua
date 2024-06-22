@@ -52,6 +52,8 @@ function M.setup(params)
   print(client.current_workspace.path)
 
   local get_node_at_cursor = function()
+    -- the path below is in ~/workData/obsidian/
+    -- but the client.current_workspace.path is in /mnt/c/...
     if string.find(vim.fn.expand("%:p"), tostring(client.current_workspace.path)) then
       in_obsidian = true
     end
@@ -100,7 +102,14 @@ function M.setup(params)
             -- For obsidian notes (with incomplete image path)
             local workspace_path = tostring(client.current_workspace.path)
             local attachments_folder = client.opts.attachments.img_folder
-            url = workspace_path .. "/" .. attachments_folder .. "/" .. value
+
+            if value:match("^(.-)|") == nil then
+              file_name = value
+            else
+              file_name = value:match("^(.-)|")
+            end
+
+            url = workspace_path .. "/" .. attachments_folder .. "/" .. file_name
           else
             -- For other markdown note (with full image path)
             url = value
@@ -108,6 +117,10 @@ function M.setup(params)
           print("name: ", name)
           print("value: ", value)
           print("url: ", url)
+
+          if in_obsidian then
+          end
+
           create_popup(url)
         end
       end
