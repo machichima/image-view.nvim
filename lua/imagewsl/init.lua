@@ -13,13 +13,15 @@ M.config = {
 
 local create_popup = function(img_path)
   if M.config.opts.open_type == "explorer" then
-    vim.cmd("!wsl-open '" .. img_path .. "'")
     print("use windows explorer")
+    vim.cmd("!wsl-open '" .. img_path .. "'")
+    print("window explorer opened")
   end
 
   if M.config.opts.open_type == "wsl" then
-    vim.cmd("!open '" .. img_path .. "'")
     print("use wsl open")
+    vim.cmd("!open '" .. img_path .. "'")
+    print("wsl opened")
   end
 
   if M.config.opts.open_type == "tmux" then
@@ -54,7 +56,7 @@ function M.setup(params)
   local get_node_at_cursor = function()
     -- the path below is in ~/workData/obsidian/
     -- but the client.current_workspace.path is in /mnt/c/...
-    if string.find(vim.fn.expand("%:p"), tostring(client.current_workspace.path)) then
+    if string.find(vim.fn.resolve(vim.fn.expand("%:p")), tostring(client.current_workspace.path)) then
       in_obsidian = true
     end
 
