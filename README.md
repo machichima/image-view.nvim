@@ -35,7 +35,7 @@ It can show the image with markdown link and wiki link:
 
 ### Lazy
 
-```{json}
+```{lua}
 {
     'machichima/image-view.nvim',
     name = "imageview",
