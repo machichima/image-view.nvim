@@ -30,7 +30,7 @@ It can show the image with markdown link and wiki link:
 
 Demo for linux using feh and kitty-tmux
 
-![linux demo](https://github.com/user-attachments/assets/ea00e16d-a241-486d-95fe-25a9bfbba4c2)
+https://github.com/user-attachments/assets/ea00e16d-a241-486d-95fe-25a9bfbba4c2
 
 
 ## Installing
