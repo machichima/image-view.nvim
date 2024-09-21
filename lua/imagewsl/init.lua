@@ -96,7 +96,7 @@ function M.setup(params)
 	local in_obsidian = false -- client.path_is_note(vim.fn.expand("%:p"), client.current_workspace)
 	print(client.current_workspace.path)
 
-	local get_node_at_cursor = function()
+	M.get_node_at_cursor = function()
 		-- the path below is in ~/workData/obsidian/
 		-- but the client.current_workspace.path is in /mnt/c/...
 		if string.find(vim.fn.resolve(vim.fn.expand("%:p")), tostring(client.current_workspace.path)) then
@@ -172,7 +172,7 @@ function M.setup(params)
 		end
 	end
 
-	vim.keymap.set("n", "<leader>i", get_node_at_cursor, {})
+	-- vim.keymap.set("n", "<leader>i", M.get_node_at_cursor, {})
 end
 
 return M
