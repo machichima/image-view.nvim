@@ -1,11 +1,77 @@
-# image-wezterm-tmux.nvim
+# image-view.nvim
 
-## Description
+Plugin to display image in the markdown file through:
 
-> Still lots of bugs exist 😢
+1. windows explorer
+2. image viewer in wsl
+3. feh (linux image viewer)
+4. tmux vertical split
+    - in wezterm or kitty
 
-A small plugin to display image using `imgcat` in wezterm and show in split term in tmux.
+This can be used in windows wsl and linux system. Option 1, 2, and 3 will open a image viewer window to show the image, while 4 will create the split view in tmux.
 
-I develop this as I am using Windows wsl2 and fail to use `image.nvim` plugin (do not know why, but I cannot make it work).
+It can show the image with markdown link and wiki link: 
+- markdown link: open the image with the relative path
+- wiki link: Only work with [obsidian.nvim](https://github.com/epwalsh/obsidian.nvim) plugin. Open the image in the folder `attachments.img_folder` set in the `obsidian.nvim` plugin.
 
-Also add obsidian support for rendering image in wiki link format
+> NOTE: currently does not support relative link option in wiki link
+
+
+## Table of Contents
+
+- [Demo](#demo)
+- [Installing](#installing)
+- [Lazy](#lazy)
+- [Usage](#usage)
+- [Configuration](#configuration)
+
+
+## Demo
+
+> To be added
+
+
+## Installing
+
+### Lazy
+
+```{json}
+{
+    'machichima/image-view.nvim',
+    event = 'VeryLazy',
+    name = "imagewsl",
+    config = function()
+        require("imagewsl").setup({})
+    end,
+},
+```
+
+## Usage
+
+Add keymap to capture and show the image with link under the cursor.
+
+Using Lua:
+
+```{lua}
+local imagewsl = require("imagewsl")
+vim.keymap.set("n", "<leader>i", imagewsl.get_node_at_cursor, {})
+```
+
+
+## Configuration
+
+Default use the `explorer` option. This can be modified on the setup by:
+
+```{lua}
+require("imagewsl").setup({
+    opts = {
+        open_type = "explorer",
+        -- option:
+        -- 1. "explorer": by Windows picture
+        -- 2. "wezterm-tmux"
+        -- 3. "kitty-tmux"
+        -- 4. "wsl": use `open` command
+        -- 5. "feh": use `feh -. filepath` to open the image (only available on linux)
+    },
+})
+```
