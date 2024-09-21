@@ -28,14 +28,16 @@ It can show the image with markdown link and wiki link:
 
 ## Demo
 
-> To be added
+Demo for linux using feh and kitty-tmux
+
+![linux demo](https://github.com/user-attachments/assets/ea00e16d-a241-486d-95fe-25a9bfbba4c2)
 
 
 ## Installing
 
 ### Lazy
 
-```{lua}
+```lua
 {
     'machichima/image-view.nvim',
     name = "imageview",
@@ -51,7 +53,7 @@ Add keymap to capture and show the image with link under the cursor.
 
 Using Lua:
 
-```{lua}
+```lua
 local imageview = require("imageview")
 vim.keymap.set("n", "<leader>i", imageview.get_node_at_cursor, {})
 ```
@@ -61,7 +63,7 @@ vim.keymap.set("n", "<leader>i", imageview.get_node_at_cursor, {})
 
 Default use the `explorer` option. This can be modified on the setup by:
 
-```{lua}
+```lua
 require("imageview").setup({
     opts = {
         open_type = "explorer",
