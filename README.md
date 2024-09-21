@@ -39,9 +39,9 @@ It can show the image with markdown link and wiki link:
 {
     'machichima/image-view.nvim',
     event = 'VeryLazy',
-    name = "imagewsl",
+    name = "imageview",
     config = function()
-        require("imagewsl").setup({})
+        require("imageview").setup({})
     end,
 },
 ```
@@ -53,8 +53,8 @@ Add keymap to capture and show the image with link under the cursor.
 Using Lua:
 
 ```{lua}
-local imagewsl = require("imagewsl")
-vim.keymap.set("n", "<leader>i", imagewsl.get_node_at_cursor, {})
+local imageview = require("imageview")
+vim.keymap.set("n", "<leader>i", imageview.get_node_at_cursor, {})
 ```
 
 
@@ -63,7 +63,7 @@ vim.keymap.set("n", "<leader>i", imagewsl.get_node_at_cursor, {})
 Default use the `explorer` option. This can be modified on the setup by:
 
 ```{lua}
-require("imagewsl").setup({
+require("imageview").setup({
     opts = {
         open_type = "explorer",
         -- option:
