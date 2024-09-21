@@ -38,7 +38,6 @@ It can show the image with markdown link and wiki link:
 ```{json}
 {
     'machichima/image-view.nvim',
-    event = 'VeryLazy',
     name = "imageview",
     config = function()
         require("imageview").setup({})
